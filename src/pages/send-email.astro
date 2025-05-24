@@ -1,0 +1,49 @@
+---
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content="{Astro.generator}" />
+		<title>Astro</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
+		/>
+		<script
+			type="module"
+			src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"
+		></script>
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+	</head>
+	<body>
+		<form class="email-input-validation-required" hx-post="/api/email" hx-trigger="submit" hx-swap="none">
+			<sl-input name="name" label="Name" required></sl-input>
+			<br />
+			<sl-input name="email" type="email" label="Email" required></sl-input>
+			<br />
+			<sl-textarea name="message" label="Message" required></sl-textarea>
+			<br />
+			<sl-button type="submit" variant="primary">Send</sl-button>
+		</form>
+		<script type="module">
+			const form = document.querySelector(".email-input-validation-required")
+			// Wait for controls to be defined before attaching form listeners
+			await Promise.all([
+				customElements.whenDefined("sl-button"),
+				customElements.whenDefined("sl-checkbox"),
+				customElements.whenDefined("sl-input"),
+				customElements.whenDefined("sl-option"),
+				customElements.whenDefined("sl-select"),
+				customElements.whenDefined("sl-textarea"),
+			]).then(() => {
+				form.addEventListener("submit", (event) => {
+					event.preventDefault()
+					alert("All fields are valid!")
+				})
+			})
+		</script>
+	</body>
+</html>

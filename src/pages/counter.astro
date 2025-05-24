@@ -1,0 +1,40 @@
+---
+import fs from "node:fs";
+
+try {
+	fs.accessSync("/tmp/count.txt");
+} catch {
+	fs.writeFileSync("/tmp/count.txt", "0");
+}
+
+const count = fs.readFileSync("/tmp/count.txt", "utf-8");
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content="{Astro.generator}" />
+		<title>Astro</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
+		/>
+		<script
+			type="module"
+			src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"
+		></script>
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+	</head>
+	<body>
+		<h1>Count: <span id="count">{count}</span></h1>
+
+		<sl-button variant="primary" hx-post="/api/increment" hx-swap="none">
+			Increment
+		</sl-button>
+		<sl-button variant="danger" hx-post="/api/decrement" hx-swap="none">
+			Decrement
+		</sl-button>
+	</body>
+</html>

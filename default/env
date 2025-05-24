@@ -1,0 +1,16 @@
+# After renaming the inputs, rename this file to `.env` and place it in the root folder
+
+SERVER_URL_1=<your_mcp_server_url>/sse
+SERVER_URL_2=<your_mcp_server_url>/sse
+LLM_HOST=http://localhost:11434/api/generate # OLLAMA default server url
+
+SLACK_BOT_TOKEN=<your_slackbot_token_that_should_start_with_xoxb>
+SLACK_POST_MSG_URL=https://slack.com/api/chat.postMessage
+SLACK_CHANNEL='#example-channel'
+
+# You can use https://ethereal.email/ for testing this
+EMAIL_PORT=587
+EMAIL_HOST=smtp.ethereal.email
+EMAIL_USER=<example_email>@ethereal.email
+EMAIL_PASS=<example_email_password>
+EMAIL_NAME=John Doe

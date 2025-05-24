@@ -1,0 +1,103 @@
+---
+---
+
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<meta name="viewport" content="width=device-width" />
+		<meta name="generator" content="{Astro.generator}" />
+		<title>Astro</title>
+		<link
+			rel="stylesheet"
+			href="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/themes/light.css"
+		/>
+		<link rel="stylesheet" href="/src/styles/chat.css" />
+		<script
+			type="module"
+			src="https://cdn.jsdelivr.net/npm/@shoelace-style/shoelace@2.20.1/cdn/shoelace-autoloader.js"
+		></script>
+		<script src="https://unpkg.com/htmx.org@2.0.4"></script>
+	</head>
+	<body>
+		<div
+			id="chat-dashboard"
+			style="max-width:600px;margin:2em auto;padding:1em;border:1px solid #ccc;border-radius:8px;"
+		>
+			<h2>Chat Dashboard</h2>
+
+			<div
+				id="chat-messages"
+				style="
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        min-height: 200px;
+        margin-bottom: 1em;
+        background: #f9f9f9;
+        padding: 1em;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        overflow-y: auto;
+        max-height: 300px;
+    "
+			>
+				<!-- Chat messages will appear here -->
+			</div>
+			<form
+				id="chat-form"
+				hx-post="/api/mcpclient"
+				hx-trigger="submit"
+				hx-target="#chat-messages"
+				hx-swap="beforeend"
+				autocomplete="off"
+				style="display: flex; gap: 0.5em;"
+			>
+				<sl-input
+					id="chat-input"
+					name="message"
+					placeholder="Type your message..."
+					pill
+					size="large"
+					style="flex: 1;"
+					required></sl-input>
+				<sl-button type="submit" variant="primary" size="large" pill>
+					<sl-icon name="send"></sl-icon> Send
+				</sl-button>
+			</form>
+
+			<script type="module">
+				const chatForm = document.getElementById("chat-form")
+				const chatInput = document.getElementById("chat-input")
+				const chatMessages = document.getElementById("chat-messages")
+
+				chatForm.addEventListener("submit", function (e) {
+					const message = chatInput.value.trim()
+					if (!message) return
+					const msgDiv = document.createElement("div")
+					msgDiv.textContent = message
+					msgDiv.className = "user-message"
+					chatMessages.appendChild(msgDiv)
+					chatMessages.scrollTop = chatMessages.scrollHeight
+					// Do NOT clear the input here!
+					// Do NOT call e.preventDefault() so htmx can submit the form
+				})
+
+				// Style bot messages after htmx swaps in the response
+				document.body.addEventListener("htmx:afterSwap", function (evt) {
+					if (evt.target === chatMessages) {
+						chatInput.value = ""
+						chatInput.focus()
+						// Only style bot messages
+						const botMsgs = chatMessages.querySelectorAll(
+							".bot-message:not([data-styled])",
+						)
+						botMsgs.forEach((msg) => {
+							msg.setAttribute("data-styled", "true")
+						})
+					}
+				})
+			</script>
+		</div>
+	</body>
+</html>
